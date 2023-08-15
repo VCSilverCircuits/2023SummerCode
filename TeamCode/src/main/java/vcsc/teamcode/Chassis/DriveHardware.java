@@ -87,16 +87,18 @@ public class DriveHardware extends MecanumDrive {
 //        trajectorySequenceRunner = new TrajectorySequenceRunnerCancelable(follower, HEADING_PID);
     }
 
-    //all field centric drive code
-    public void FieldCentricTrig(double left_stick_x, double right_stick_x, double left_stick_y, boolean left_bumper, boolean aButton) {
-        Orientation angles = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double heading = (((angles.firstAngle + 360) % 360));
+    //field centric drive method
+    public void FieldCentricTrig(double left_stick_y, double right_stick_x, double left_stick_x, boolean left_bumper, boolean aButton) {
 
-        //math for field centric driving
-        final double direction = (Math.atan2(left_stick_x, left_stick_y));
-        final double direction2 = direction + Range.scale(heading, 0, 360, 3, -3);//90
-        speed = Math.min(1.0, sqrt(left_stick_x * left_stick_x + left_stick_y * left_stick_y));//more math for the field centric driving
-        double power1 = speed * Math.sin(direction2 - Math.PI / 4.0);
+        //Get current heading from IMU.
+        Orientation angles = imu.getRobotOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double heading = (((angles.firstAngle) % 360));//Get current heading.
+
+        //Math for field centric driving
+        final double direction = (Math.atan2(-left_stick_y, -left_stick_x));//Find the direction we want the robot to travel.
+        final double direction2 = direction + Math.toRadians(heading); //Range.scale(heading + 180, 0, 360, -3, 3);//Add heading for field centric
+        speed = Math.min(1.0, sqrt(-left_stick_y * -left_stick_y + -left_stick_x * -left_stick_x));//Math to get the speed at witch we need to drive
+        double power1 = speed * Math.sin(direction2 - Math.PI / 4.0);//Powers for the different corners of the drivetrain.
         double power2 = speed * Math.sin(direction2 + Math.PI / 4.0);
 
         PivotPID.setPIDF(rotationP, rotationI, rotationD, 0);
@@ -130,41 +132,41 @@ public class DriveHardware extends MecanumDrive {
         final double rf = power2 + (rotation / 1.5);
         final double lr = power2 - (rotation / 1.5);
         final double rr = power1 + (rotation / 1.5);
-        //logic for making the robot speedup and slow down
-        double speedOfRamp = 0.0001;
-        if ((count == 0) && (holdTimer.milliseconds() > 75)) {
-            if (lf > lf2) {
-                lf2 = lf + speedOfRamp;
-            } else if (lf < lf2) {
-                lf2 = lf - speedOfRamp;
-            }
-            if (rf > rf2) {
-                rf2 = rf + speedOfRamp;
-            } else if (rf < rf2) {
-                rf2 = rf - speedOfRamp;
-            }
-            if (lr > lr2) {
-                lr2 = lr + speedOfRamp;
-            } else if (lr < lr2) {
-                lr2 = lr - speedOfRamp;
-            }
-            if (rr > rr2) {
-                rr2 = rr + speedOfRamp;
-            } else if (rr < rr2) {
-                rr2 = rr - speedOfRamp;
-            }
-            if ((rr == rr2) && (lf == lf2) && (lr == lr2) && (rf == rf2)) {
-                count = 1;
-            }
-            holdTimer.reset();
-        } else if ((rr != rr2) && (lf != lf2) && (lr != lr2) && (rf != rf2)) {
-            count = 0;
-        }
+//        //logic for making the robot speedup and slow down
+//        double speedOfRamp = 0.0001;
+//        if ((count == 0) && (holdTimer.milliseconds() > 75)) {
+//            if (lf > lf2) {
+//                lf2 = lf + speedOfRamp;
+//            } else if (lf < lf2) {
+//                lf2 = lf - speedOfRamp;
+//            }
+//            if (rf > rf2) {
+//                rf2 = rf + speedOfRamp;
+//            } else if (rf < rf2) {
+//                rf2 = rf - speedOfRamp;
+//            }
+//            if (lr > lr2) {
+//                lr2 = lr + speedOfRamp;
+//            } else if (lr < lr2) {
+//                lr2 = lr - speedOfRamp;
+//            }
+//            if (rr > rr2) {
+//                rr2 = rr + speedOfRamp;
+//            } else if (rr < rr2) {
+//                rr2 = rr - speedOfRamp;
+//            }
+//            if ((rr == rr2) && (lf == lf2) && (lr == lr2) && (rf == rf2)) {
+//                count = 1;
+//            }
+//            holdTimer.reset();
+//        } else if ((rr != rr2) && (lf != lf2) && (lr != lr2) && (rf != rf2)) {
+//            count = 0;
+//        }
         //set motor powers and if the right bumper is pressed then double speed.
-        rightFront.setPower(rf2);
-        rightRear.setPower(rr2);
-        leftFront.setPower(lf2);
-        leftRear.setPower(lr2);
+        rightFront.setPower(rf);
+        rightRear.setPower(rr);
+        leftFront.setPower(lf);
+        leftRear.setPower(lr);
         if (aButton){
             imu.resetYaw();
         }
@@ -174,6 +176,10 @@ public class DriveHardware extends MecanumDrive {
     public double angleAdd(double angle, int timeZeroIsCrossed){
         return angle + (timeZeroIsCrossed * 360);
     }
+
+
+
+
 
     //some trash about odo that's dumb
     @Override
@@ -224,6 +230,9 @@ public class DriveHardware extends MecanumDrive {
 //        DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
 //        if (signal != null) setDriveSignal(signal);
     }
+
+
+
 
     //methood to read our heading
     public double heading(){
