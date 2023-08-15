@@ -1,10 +1,10 @@
-package vcsc.Chassis;
+package vcsc.teamcode.Chassis;
 
-import static org.firstinspires.ftc.teamcode.Chassis.DriveConstants.TRACK_WIDTH;
-import static org.firstinspires.ftc.teamcode.Chassis.DriveConstants.encoderTicksToInches;
-import static org.firstinspires.ftc.teamcode.Chassis.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.Chassis.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.Chassis.DriveConstants.kV;
+import static vcsc.teamcode.Chassis.DriveConstants.TRACK_WIDTH;
+import static vcsc.teamcode.Chassis.DriveConstants.encoderTicksToInches;
+import static vcsc.teamcode.Chassis.DriveConstants.kA;
+import static vcsc.teamcode.Chassis.DriveConstants.kStatic;
+import static vcsc.teamcode.Chassis.DriveConstants.kV;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
@@ -42,7 +42,7 @@ public class DriveHardware extends MecanumDrive {
     public static double rotationP = 0.04, rotationD = 0.005, rotationI = 0;
     PIDFController PivotPID;
     //vars for odo and an arry to store the motors
-    private TrajectorySequenceRunner trajectorySequenceRunner;
+//    private TrajectorySequenceRunner trajectorySequenceRunner;
     public static double LATERAL_MULTIPLIER = 1.2;
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -84,7 +84,7 @@ public class DriveHardware extends MecanumDrive {
 
         PivotPID = new PIDFController(rotationP, 0, rotationD, rotationI);
 
-        trajectorySequenceRunner = new TrajectorySequenceRunnerCancelable(follower, HEADING_PID);
+//        trajectorySequenceRunner = new TrajectorySequenceRunnerCancelable(follower, HEADING_PID);
     }
 
     //all field centric drive code
@@ -221,8 +221,8 @@ public class DriveHardware extends MecanumDrive {
 
     public void update() {
         updatePoseEstimate();
-        DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
-        if (signal != null) setDriveSignal(signal);
+//        DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
+//        if (signal != null) setDriveSignal(signal);
     }
 
     //methood to read our heading

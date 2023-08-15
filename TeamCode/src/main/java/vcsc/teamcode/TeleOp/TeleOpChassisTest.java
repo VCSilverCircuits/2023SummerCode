@@ -1,4 +1,4 @@
-package vcsc.TeleOp;
+package vcsc.teamcode.TeleOp;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Chassis.DriveHardware;
+import vcsc.teamcode.Chassis.DriveHardware;
 
 @Config
 @TeleOp(name = "New TeleOp", group = "GG(Get Girls)")
