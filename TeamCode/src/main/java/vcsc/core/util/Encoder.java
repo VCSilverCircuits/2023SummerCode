@@ -1,4 +1,4 @@
-package vcsc.teamcode.util;
+package vcsc.core.util;
 
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.hardware.DcMotorEx;

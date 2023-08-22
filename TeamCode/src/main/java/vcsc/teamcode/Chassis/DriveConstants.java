@@ -1,6 +1,7 @@
 package vcsc.teamcode.Chassis;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
 /*
     class that holds hardware values for odo pods
@@ -20,6 +21,10 @@ public class DriveConstants {
     public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
     public static double kA = 0;
     public static double kStatic = 0;
+
+    //imu parameters
+    public static RevHubOrientationOnRobot.LogoFacingDirection LOGO_FACING_DIR = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+    public static RevHubOrientationOnRobot.UsbFacingDirection USB_FACING_DIR = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
 
 
     public static double encoderTicksToInches(double ticks) {
