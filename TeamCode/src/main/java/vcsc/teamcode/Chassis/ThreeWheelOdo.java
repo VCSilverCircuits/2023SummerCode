@@ -22,8 +22,11 @@ public class ThreeWheelOdo extends ThreeTrackingWheelLocalizer {
     public static double WHEEL_RADIUS = 0.6889764; // in in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 5.8; // in; distance between the left and right wheels
-    public static double FORWARD_OFFSET = 4; // in; offset of the lateral wheel
+    public static double LATERAL_DISTANCE = 6; // in; distance between the left and right wheels
+    public static double FORWARD_OFFSET = 0; // in; offset of the lateral wheel
+
+    public static double X_MULTIPLIER = 1; // Multiplier in the X direction
+    public static double Y_MULTIPLIER = 1; // Multiplier in the Y direction
 
     private final Encoder leftEncoder;
     private final Encoder rightEncoder;
@@ -38,9 +41,11 @@ public class ThreeWheelOdo extends ThreeTrackingWheelLocalizer {
 
         leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rearright"));  //left
         rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontleft")); //right
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontleft")); //perpendicular
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rearleft")); //perpendicular
 
-        // double check encoder directions
+        // reverse encoder directions
+        frontEncoder.setDirection(Encoder.Direction.REVERSE);
+        rightEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
     //convert tics to inches
@@ -52,9 +57,9 @@ public class ThreeWheelOdo extends ThreeTrackingWheelLocalizer {
     @Override
     public List<Double> getWheelPositions() {
         return Arrays.asList(
-                encoderTicksToInches(leftEncoder.getCurrentPosition()),
-                encoderTicksToInches(rightEncoder.getCurrentPosition()),
-                encoderTicksToInches(frontEncoder.getCurrentPosition())
+                encoderTicksToInches(leftEncoder.getCurrentPosition()) * X_MULTIPLIER,
+                encoderTicksToInches(rightEncoder.getCurrentPosition()) * X_MULTIPLIER,
+                encoderTicksToInches(frontEncoder.getCurrentPosition()) * Y_MULTIPLIER
         );
     }
 
@@ -66,9 +71,9 @@ public class ThreeWheelOdo extends ThreeTrackingWheelLocalizer {
         //  compensation method
 
         return Arrays.asList(
-                encoderTicksToInches(leftEncoder.getRawVelocity()),
-                encoderTicksToInches(rightEncoder.getRawVelocity()),
-                encoderTicksToInches(frontEncoder.getRawVelocity())
+                encoderTicksToInches(leftEncoder.getCorrectedVelocity()) * X_MULTIPLIER,
+                encoderTicksToInches(rightEncoder.getCorrectedVelocity()) * X_MULTIPLIER,
+                encoderTicksToInches(frontEncoder.getCorrectedVelocity()) * Y_MULTIPLIER
         );
     }
 }
